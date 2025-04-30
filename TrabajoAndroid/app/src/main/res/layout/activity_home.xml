@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".vista.HomeActivity">
+
+    <!-- Botón para los circuitos fáciles -->
+
+    <!-- Botón para los circuitos medios -->
+
+    <Button
+        android:id="@+id/btnFacil"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="Circuitos Fáciles"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.252" />
+
+    <Button
+        android:id="@+id/btnMedio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Circuitos Medios"
+        app:layout_constraintTop_toBottomOf="@id/btnFacil"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="20dp"/>
+
+    <!-- Botón para los circuitos difíciles -->
+    <Button
+        android:id="@+id/btnDificil"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Circuitos Difíciles"
+        app:layout_constraintTop_toBottomOf="@id/btnMedio"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="20dp"/>
+
+    <!-- Botón para mostrar todos los circuitos -->
+    <Button
+        android:id="@+id/btnTodos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Todos los Circuitos"
+        app:layout_constraintTop_toBottomOf="@id/btnDificil"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="20dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

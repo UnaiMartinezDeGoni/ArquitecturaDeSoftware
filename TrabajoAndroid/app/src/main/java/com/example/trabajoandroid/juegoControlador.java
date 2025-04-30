@@ -43,6 +43,7 @@ public class juegoControlador {
     }
 
     public void run() {
+        /*
         Ejercicio ej1 = new Ejercicio("Nombre1", "Descripcion1");
         Ejercicio ej2 = new Ejercicio("Nombre2", "Descripcion2");
         Ejercicio ej3 = new Ejercicio("Nombre3", "Descripcion3");
@@ -119,7 +120,7 @@ public class juegoControlador {
 
         Juego juego1 = crearJuego(usuarios.getUsuario(1), "Medio");
 
-        juegoFinalizado(usuarios.getUsuario(1), juego1);
+        juegoFinalizado(usuarios.getUsuario(1), juego1);*/
 
         //Crear las vistas
     }

@@ -30,6 +30,10 @@ public class Usuario {
         return juegosRealizados;
     }
 
+    public String getPasswd() {
+        return passwd;
+    }
+
     public String getJuegos(int indice) {
         return juegosRealizados.get(indice);
     }

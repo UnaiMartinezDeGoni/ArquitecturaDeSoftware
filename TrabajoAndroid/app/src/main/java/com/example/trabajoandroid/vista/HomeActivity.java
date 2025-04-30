@@ -1,0 +1,38 @@
+package com.example.trabajoandroid.vista;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.Button;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+import com.example.trabajoandroid.R;
+
+public class HomeActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_home);
+
+        Button btnFacil = findViewById(R.id.btnFacil);
+        Button btnMedio = findViewById(R.id.btnMedio);
+        Button btnDificil = findViewById(R.id.btnDificil);
+        Button btnTodos = findViewById(R.id.btnTodos);
+
+        btnFacil.setOnClickListener(v -> navigateToCircuitos("Facil"));
+        btnMedio.setOnClickListener(v -> navigateToCircuitos("Medio"));
+        btnDificil.setOnClickListener(v -> navigateToCircuitos("Dificil"));
+        btnTodos.setOnClickListener(v -> navigateToCircuitos("Todos"));
+    }
+
+    private void navigateToCircuitos(String dificultad) {
+        Intent intent = new Intent(HomeActivity.this, CircuitosActivity.class);
+        intent.putExtra("dificultad", dificultad);
+        startActivity(intent);
+    }
+}
