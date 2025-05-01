@@ -1,4 +1,3 @@
-// File: app/src/main/java/com/example/trabajoandroid/utils/CircuitoMapaHelper.java
 package com.example.trabajoandroid;
 
 import android.os.AsyncTask;
@@ -13,10 +12,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Helper para cargar un Circuito desde Back4App, parsear sus checkpoints
- * y dibujarlos como marcadores en un GoogleMap.
- */
+
 public class CircuitoMapaHelper {
 
     public interface Callback {

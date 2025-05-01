@@ -1,6 +1,5 @@
 package com.example.trabajoandroid.vista;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -8,67 +7,76 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.trabajoandroid.R;
 import com.example.trabajoandroid.UbicacionHelper;
-import com.example.trabajoandroid.CircuitoMapaHelper;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class MapaActivity extends FragmentActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
-    private UbicacionHelper ubicacionHelper;
+    private UbicacionHelper ubicHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mapa);
 
-        ubicacionHelper = new UbicacionHelper(this);
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        ubicHelper = new UbicacionHelper(this);
+        SupportMapFragment mapF = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        if (mapFragment != null) {
-            mapFragment.getMapAsync(this);
-        }
+        if (mapF != null) mapF.getMapAsync(this);
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        ubicacionHelper.solicitarPermisoYMostrarUbicacion(mMap);
+        ubicHelper.solicitarPermisoYMostrarUbicacion(mMap);
 
-        int idx = getIntent().getIntExtra("CIRCUITO_INDEX", -1);
-        if (idx != -1) {
-            CircuitoMapaHelper.cargarCircuitoEnMapa(idx, new CircuitoMapaHelper.Callback() {
-                @Override
-                public void onCircuitoLoaded(List<LatLng> puntos, List<String> titulos) {
-                    // 1) Pintamos los marcadores
-                    CircuitoMapaHelper.mostrarPuntosEnMapa(mMap, puntos, titulos);
-
-                    // 2) Reubicamos la cámara en el primer punto
-                    if (!puntos.isEmpty()) {
-                        LatLng primerPunto = puntos.get(0);
-                        // mover la cámara con un zoom de 15 (ajústalo a tu gusto)
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(primerPunto, 15));
-                    }
-                }
-                @Override
-                public void onError(String mensaje) {
-                    Toast.makeText(MapaActivity.this, mensaje, Toast.LENGTH_LONG).show();
-                }
-            });
+        // Leer checkpoints y nombre
+        ArrayList<String> cps = getIntent().getStringArrayListExtra("CHECKPOINTS");
+        String nombre = getIntent().getStringExtra("CIRCUITO_NOMBRE");
+        if (cps == null || cps.isEmpty()) {
+            Toast.makeText(this, "No hay puntos para mostrar", Toast.LENGTH_LONG).show();
+            return;
         }
+
+        LatLngBounds.Builder b = new LatLngBounds.Builder();
+        // Parsear y pintar cada punto
+        for (String cp : cps) {
+            String[] p = cp.split(",");
+            try {
+                double lat = Double.parseDouble(p[0].trim());
+                double lng = Double.parseDouble(p[1].trim());
+                LatLng coord = new LatLng(lat, lng);
+                mMap.addMarker(new MarkerOptions()
+                        .position(coord)
+                        .title(nombre));
+                b.include(coord);
+            } catch (Exception ignored) {}
+        }
+
+        // Centrar cámara en el primer punto
+        String[] first = cps.get(0).split(",");
+        LatLng inicio = new LatLng(
+                Double.parseDouble(first[0].trim()),
+                Double.parseDouble(first[1].trim())
+        );
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(inicio, 15));
+
+        // (opcional) si quieres ajustar bounds para todos:
+        // mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(b.build(), 100));
     }
 
-
-
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == UbicacionHelper.getRequestCode()) {
-            ubicacionHelper.mostrarUbicacion(mMap);
+    public void onRequestPermissionsResult(int req, String[] perms, int[] grants) {
+        super.onRequestPermissionsResult(req, perms, grants);
+        if (req == UbicacionHelper.getRequestCode()) {
+            ubicHelper.mostrarUbicacion(mMap);
         }
     }
 }

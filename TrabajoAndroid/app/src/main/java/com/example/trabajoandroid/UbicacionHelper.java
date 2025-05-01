@@ -27,7 +27,6 @@ public class UbicacionHelper {
         this.fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity);
     }
 
-    /** Pide permiso y, si lo tienes, dibuja tu ubicación en el mapa */
     public void solicitarPermisoYMostrarUbicacion(GoogleMap map) {
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -39,7 +38,6 @@ public class UbicacionHelper {
         }
     }
 
-    /** Dibuja tu última ubicación conocida en el mapa */
     public void mostrarUbicacion(GoogleMap map) {
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -61,9 +59,5 @@ public class UbicacionHelper {
 
     public static int getRequestCode() {
         return LOCATION_PERMISSION_REQUEST_CODE;
-    }
-
-    public FusedLocationProviderClient getFusedLocationClient() {
-        return fusedLocationClient;
     }
 }
