@@ -16,6 +16,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -46,4 +47,7 @@ dependencies {
     implementation("com.google.code.gson:gson:2.8.8")
     implementation("org.json:json:20210307")
     testImplementation("junit:junit:4.12")
+    implementation ("com.google.android.gms:play-services-maps:18.1.0")
+    implementation ("com.google.android.gms:play-services-location:21.0.1")
+
 }
