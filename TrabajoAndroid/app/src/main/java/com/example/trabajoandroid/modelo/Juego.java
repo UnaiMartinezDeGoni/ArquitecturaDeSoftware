@@ -136,4 +136,8 @@ public class Juego {//habria que pasar el juego al dao o añadir un inventario d
     public int hashCode() {
         return Objects.hash(API_URL, APPLICATION_ID, REST_API_KEY, objectId, user, circuito, dificultad, horaInicio, time);
     }
+
+    public void setTime(float tiempo){
+        this.time = tiempo;
+    }
 }

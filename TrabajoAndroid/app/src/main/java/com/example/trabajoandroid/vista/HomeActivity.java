@@ -13,11 +13,14 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.trabajoandroid.R;
 
 public class HomeActivity extends AppCompatActivity {
+    private String usuarioNombre;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        usuarioNombre = getIntent().getStringExtra("usuario_id");
 
         Button btnFacil = findViewById(R.id.btnFacil);
         Button btnMedio = findViewById(R.id.btnMedio);
@@ -33,6 +36,7 @@ public class HomeActivity extends AppCompatActivity {
     private void navigateToCircuitos(String dificultad) {
         Intent intent = new Intent(HomeActivity.this, CircuitosActivity.class);
         intent.putExtra("dificultad", dificultad);
+        intent.putExtra("usuario_id", usuarioNombre);
         startActivity(intent);
     }
 }

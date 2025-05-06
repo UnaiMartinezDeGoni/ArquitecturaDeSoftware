@@ -58,4 +58,8 @@ public class Circuito {
 
         return res;
     }
+
+    public void setId(String id){
+        this.objectId = id;
+    }
 }

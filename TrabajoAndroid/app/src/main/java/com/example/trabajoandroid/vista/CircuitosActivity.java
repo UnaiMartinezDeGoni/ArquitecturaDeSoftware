@@ -26,11 +26,14 @@ public class CircuitosActivity extends AppCompatActivity {
     private ListView listView;
     private CircuitoAdapter circuitoAdapter;
     private ArrayList<Circuito> circuitosList;
+    private String usuarioNombre;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_circuitos);
+
+        usuarioNombre = getIntent().getStringExtra("usuario_id");
 
         listView = findViewById(R.id.listViewCircuitos);
         String dificultad = getIntent().getStringExtra("dificultad");
@@ -72,6 +75,10 @@ public class CircuitosActivity extends AppCompatActivity {
                 intent.putStringArrayListExtra("CHECKPOINTS",
                         new ArrayList<>(sel.getCheckpoints()));
                 intent.putExtra("CIRCUITO_NOMBRE", sel.getNombre());
+                intent.putExtra("usuario_id", usuarioNombre);
+                System.out.println(sel.getId());
+                intent.putExtra("circuito_id", sel.getId());
+                intent.putExtra("circuito_dificultad", sel.getDificultad());
                 startActivity(intent);
             });
         }
@@ -97,6 +104,7 @@ public class CircuitosActivity extends AppCompatActivity {
             JsonArray results = root.getAsJsonArray("results");
             for (int i = 0; i < results.size(); i++) {
                 JsonObject obj = results.get(i).getAsJsonObject();
+                String id = obj.get("objectId").getAsString();
                 String nombre = obj.get("nombre").getAsString();
                 String dif = obj.get("dificultad").getAsString();
 
@@ -112,7 +120,10 @@ public class CircuitosActivity extends AppCompatActivity {
                     ejercicios.add(lis.get(j).getAsString());
                 }
 
-                list.add(new Circuito(nombre, dif, checkpoints, ejercicios));
+                // Crear circuito y asignar el ID
+                Circuito circuito = new Circuito(nombre, dif, checkpoints, ejercicios);
+                circuito.setId(id);  // <-- asegurate de tener este setter en tu clase Circuito
+                list.add(circuito);
             }
             return list;
         }

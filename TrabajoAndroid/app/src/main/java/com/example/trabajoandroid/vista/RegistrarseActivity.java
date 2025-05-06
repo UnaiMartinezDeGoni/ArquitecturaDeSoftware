@@ -80,6 +80,7 @@ public class RegistrarseActivity extends AppCompatActivity {
                     if (!objectId.isEmpty()) {
                         runOnUiThread(() -> Toast.makeText(RegistrarseActivity.this, "Registro exitoso", Toast.LENGTH_SHORT).show());
                         Intent intent = new Intent(RegistrarseActivity.this, HomeActivity.class);
+                        intent.putExtra("usuario_id", newUser.getId());
                         startActivity(intent);  // Lanza la nueva actividad
                         finish();  // Finaliza la actividad de registro para que no se pueda regresar a ella
                     } else {

@@ -71,7 +71,7 @@ public class LogInActivity extends AppCompatActivity {
                     runOnUiThread(() -> {
                         Toast.makeText(LogInActivity.this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(LogInActivity.this, HomeActivity.class);
-                        intent.putExtra("usuario_nombre", usuario.getNombre());
+                        intent.putExtra("usuario_id", usuario.getId());
                         startActivity(intent);
                         finish();
                     });
