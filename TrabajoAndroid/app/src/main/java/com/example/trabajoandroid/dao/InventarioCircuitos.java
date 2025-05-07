@@ -144,4 +144,5 @@ public class InventarioCircuitos implements InventarioCircuitosInterfaz{
         ArrayList<Circuito> circuitos = getAll();
         return circuitos.get(seleccionado);
     }
+
 }

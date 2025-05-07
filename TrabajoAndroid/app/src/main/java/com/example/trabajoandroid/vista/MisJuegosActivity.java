@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trabajoandroid.LocalTimeAdapter;
 import com.example.trabajoandroid.R;
+import com.example.trabajoandroid.modelo.Circuito;
 import com.example.trabajoandroid.modelo.Juego;
 import com.example.trabajoandroid.modelo.Usuario;
 import com.google.gson.Gson;
@@ -33,6 +34,8 @@ import okhttp3.Response;
 public class MisJuegosActivity extends AppCompatActivity {
 
     private ListView listView;
+    private final String APPLICATION_ID ="EHUFM0VK5GnLAD601JX7T3sEfDSQ4tDkEPlZFqwH";
+    private final String REST_API_KEY ="eQNek326ON4ELaQdzCbRKt0dDQYSZKQlie504BWb";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +58,8 @@ public class MisJuegosActivity extends AppCompatActivity {
 
             Request request = new Request.Builder()
                     .url(url)
-                    .addHeader("X-Parse-Application-Id", "EHUFM0VK5GnLAD601JX7T3sEfDSQ4tDkEPlZFqwH")
-                    .addHeader("X-Parse-REST-API-Key", "eQNek326ON4ELaQdzCbRKt0dDQYSZKQlie504BWb")
+                    .addHeader("X-Parse-Application-Id", APPLICATION_ID)
+                    .addHeader("X-Parse-REST-API-Key", REST_API_KEY)
                     .addHeader("Content-Type", "application/json")
                     .build();
 
@@ -89,7 +92,9 @@ public class MisJuegosActivity extends AppCompatActivity {
                 Juego juego = obtenerJuegoPorId(idJuego);
                 Log.d("juego", juego.toString());
                 if (juego != null) {
-                    String detalle = "Circuito: " + juego.getCircuito()
+                    Circuito circuito = obtenerCircuitoPorId(juego.getCircuito());
+                    assert circuito != null;
+                    String detalle = "Circuito: " + circuito.getNombre()
                             + " | Dificultad: " + juego.getDificultad()
                             + " | Tiempo: " + String.format("%.2f", juego.getTime()) + " min";
                     detalles.add(detalle);
@@ -112,25 +117,13 @@ public class MisJuegosActivity extends AppCompatActivity {
 
         Request request = new Request.Builder()
                 .url(API_URL)
-                .addHeader("X-Parse-Application-Id", "EHUFM0VK5GnLAD601JX7T3sEfDSQ4tDkEPlZFqwH")
-                .addHeader("X-Parse-REST-API-Key", "eQNek326ON4ELaQdzCbRKt0dDQYSZKQlie504BWb")
+                .addHeader("X-Parse-Application-Id", APPLICATION_ID)
+                .addHeader("X-Parse-REST-API-Key", REST_API_KEY)
                 .addHeader("Content-Type", "application/json")
                 .get()
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
-            /*if (response.isSuccessful() && response.body() != null) {
-                Gson gson = new GsonBuilder()
-                        .registerTypeAdapter(LocalTime.class, new LocalTimeAdapter())
-                        .create();
-                Gson gson = new Gson();
-
-                String json = response.body().string();
-
-                Log.d("json obtenerJuegoPorId", json);
-                Log.d("Gson obtenerJuegoporId", String.valueOf(gson.fromJson(json, Juego.class)));
-                return gson.fromJson(json, Juego.class);
-            }*/
             if (response.isSuccessful() && response.body() != null) {
                 String json = response.body().string();
                 Log.d("Juego json:", json);
@@ -153,11 +146,51 @@ public class MisJuegosActivity extends AppCompatActivity {
         return null;
     }
 
+    private Circuito obtenerCircuitoPorId(String objectId){
+        String API_URL = "https://parseapi.back4app.com/classes/Circuito?where={\"objectId\":\"" + objectId + "\"}";
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url(API_URL)
+                .addHeader("X-Parse-Application-Id", APPLICATION_ID)
+                .addHeader("X-Parse-REST-API-Key", REST_API_KEY)
+                .addHeader("Content-Type", "application/json")
+                .get()
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (response.isSuccessful() && response.body() != null) {
+                String json = response.body().string();
+                Log.d("Circuito json:", json);
+
+                Gson gson = new Gson();
+                CircuitoResponse circuitoResponse = gson.fromJson(json, CircuitoResponse.class);
+                Log.d("CircuitoResponse: ", circuitoResponse.toString());
+
+                if (circuitoResponse.results != null && !circuitoResponse.results.isEmpty()) {
+                    Circuito circuito = circuitoResponse.results.get(0);
+                    Log.d("Circuito: ", String.valueOf(circuito));
+                    return circuito;
+                }
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+
     private static class UsuarioResponse {
         List<Usuario> results;
     }
 
     private static class JuegoResponse {
         List<Juego> results;
+    }
+
+    private static class CircuitoResponse {
+        List<Circuito> results;
     }
 }
