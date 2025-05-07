@@ -30,30 +30,45 @@ public class InventarioCircuitos implements InventarioCircuitosInterfaz{
     @Override
     public ArrayList<Circuito> getAll(){
         ArrayList<Circuito> proveedores = new ArrayList<Circuito>();
-        try{
-            //sincrono
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .url(API_URL)
-                    .addHeader("X-Parse-Application-Id", APPLICATION_ID)
-                    .addHeader("X-Parse-REST-API-Key", REST_API_KEY)
-                    .addHeader("Content-Type", "application/json")
-                    .get()
-                    .build();
-            Response response = client.newCall(request).execute();
-            if(response.code() == 200) {
-                String responseJson = response.body().string();
-                System.out.println(responseJson);
-                JsonObject jsonObject = new Gson().fromJson(responseJson, JsonObject.class);
-                JsonArray jsonArray = jsonObject.getAsJsonArray("results");
-                Gson gson = new Gson();
-                Type listType = new TypeToken<ArrayList<Circuito>>() {
-                }.getType();
-                proveedores = gson.fromJson(jsonArray, listType);
+
+        // Ejecutar en un hilo de fondo
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    OkHttpClient client = new OkHttpClient();
+                    Request request = new Request.Builder()
+                            .url(API_URL)
+                            .addHeader("X-Parse-Application-Id", APPLICATION_ID)
+                            .addHeader("X-Parse-REST-API-Key", REST_API_KEY)
+                            .addHeader("Content-Type", "application/json")
+                            .get()
+                            .build();
+                    Response response = client.newCall(request).execute();
+
+                    if (response.code() == 200) {
+                        String responseJson = response.body().string();
+                        JsonObject jsonObject = new Gson().fromJson(responseJson, JsonObject.class);
+                        JsonArray jsonArray = jsonObject.getAsJsonArray("results");
+                        Gson gson = new Gson();
+                        Type listType = new TypeToken<ArrayList<Circuito>>() {}.getType();
+                        proveedores.addAll(gson.fromJson(jsonArray, listType));
+                    }
+                } catch (IOException e) {
+                    System.out.println(e.getMessage());
+                }
+
+                // Actualiza la UI en el hilo principal si es necesario
+                // Si necesitas actualizar la UI en el hilo principal, puedes usar un handler o algo similar:
+                // runOnUiThread(new Runnable() {
+                //     @Override
+                //     public void run() {
+                //         // Actualizar la UI con los datos aquí, si es necesario
+                //     }
+                // });
             }
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
+        }).start();
+
         return proveedores;
     }
 

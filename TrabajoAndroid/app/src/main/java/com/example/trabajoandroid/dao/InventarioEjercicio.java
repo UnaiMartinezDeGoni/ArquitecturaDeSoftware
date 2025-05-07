@@ -58,30 +58,36 @@ public class InventarioEjercicio implements InventarioEjercicioInterfaz{
     }
 
     @Override
-    public String insert(Ejercicio ejercicio){
-        String objectId="";
+    public String insert(Ejercicio ejercicio) {
+        String objectId = "";
         Gson gson = new Gson();
-        String jsonEmployee = gson.toJson(ejercicio);
+        String jsonEjercicio = gson.toJson(ejercicio);
         try {
             Request request = new Request.Builder()
                     .url(API_URL)
                     .addHeader("X-Parse-Application-Id", APPLICATION_ID)
                     .addHeader("X-Parse-REST-API-Key", REST_API_KEY)
-                    .post(RequestBody.create(MediaType.get("application/json"),jsonEmployee))
+                    .post(RequestBody.create(MediaType.get("application/json"), jsonEjercicio))
                     .build();
             OkHttpClient client = new OkHttpClient();
             Response response = client.newCall(request).execute();
-            if(response.isSuccessful()) {
-                Ejercicio newEjercicio = gson.fromJson(response.body().string(), Ejercicio.class);
-                objectId = String.valueOf(newEjercicio.getId());
-                System.out.println("insert" + objectId);
+            if (response.isSuccessful()) {
+                // Obtener la respuesta como un objeto JSON
+                JsonObject jsonResponse = new Gson().fromJson(response.body().string(), JsonObject.class);
+
+                // Obtener el objectId directamente de la respuesta
+                objectId = jsonResponse.get("objectId").getAsString();
+
+                // Asignar el objectId al objeto Ejercicio
+                ejercicio.setId(objectId); // Asegúrate de que tienes un método setId() en Ejercicio.
+                System.out.println("Insertado Ejercicio con ID: " + objectId);
+            } else {
+                System.out.println("Error al insertar ejercicio: " + response.message());
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
         return objectId;
-
     }
 
     @Override

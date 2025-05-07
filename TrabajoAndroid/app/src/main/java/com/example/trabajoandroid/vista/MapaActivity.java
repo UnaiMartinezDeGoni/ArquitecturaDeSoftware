@@ -3,6 +3,7 @@ package com.example.trabajoandroid.vista;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -11,7 +12,10 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.trabajoandroid.R;
 import com.example.trabajoandroid.UbicacionHelper;
+import com.example.trabajoandroid.dao.InventarioCircuitos;
 import com.example.trabajoandroid.dao.InventarioUsuario;
+import com.example.trabajoandroid.modelo.Circuito;
+import com.example.trabajoandroid.modelo.ItemEjercicio;
 import com.example.trabajoandroid.modelo.Juego;
 import com.example.trabajoandroid.modelo.Usuario;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -39,6 +43,7 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
     private String usuarioNombre;
     private String circuitoId;
     private String circuitoDificultad;
+    private int indiceEjs = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,6 +168,10 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
             // Muestra un mensaje diciendo que has llegado al checkpoint
             Toast.makeText(MapaActivity.this, "¡Has llegado al siguiente checkpoint!", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(MapaActivity.this, EjercicioActivity.class);
+            ArrayList<String> idEj = getIntent().getStringArrayListExtra("circuito_ejs");
+            Log.d("Mapa id item", idEj.get(indiceEjs));
+            intent.putExtra("ejercicio_id", idEj.get(indiceEjs));
+            indiceEjs++;
             startActivity(intent);
         }
 

@@ -1,13 +1,15 @@
 package com.example.trabajoandroid.modelo;
 
+import com.google.gson.annotations.SerializedName;
+
 public class EjercicioItemEjercicio {
     private String objectId;
-    private String objectIdEjercicio;
     private String objectIdItemEjercicio;
+    private String objectIdEjercicio;
 
-    public EjercicioItemEjercicio(String objectIdCircuito, String objectIdItemEjercicio) {
-        this.objectIdEjercicio = objectIdCircuito;
+    public EjercicioItemEjercicio(String objectIdItemEjercicio, String objectIdEjercicio) {
         this.objectIdItemEjercicio = objectIdItemEjercicio;
+        this.objectIdEjercicio = objectIdEjercicio;
     }
 
     public String getObjectIdEjercicio() {
@@ -18,7 +20,7 @@ public class EjercicioItemEjercicio {
         return objectIdItemEjercicio;
     }
 
-    public String getId() {
+    public String getObjectId() {
         return objectId;
     }
 }

@@ -26,4 +26,8 @@ public class Ejercicio {
     public String toString() {
         return "Ejercicio{" + "nombre=" + nombre + ", descripcion=" + descripcion + ", id=" + objectId + '}';
     }
+
+    public void setId(String id){
+        this.objectId = id;
+    }
 }

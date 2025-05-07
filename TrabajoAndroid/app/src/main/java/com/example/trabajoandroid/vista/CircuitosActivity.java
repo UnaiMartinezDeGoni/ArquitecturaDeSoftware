@@ -79,6 +79,7 @@ public class CircuitosActivity extends AppCompatActivity {
                 System.out.println(sel.getId());
                 intent.putExtra("circuito_id", sel.getId());
                 intent.putExtra("circuito_dificultad", sel.getDificultad());
+                intent.putStringArrayListExtra("circuito_ejs", new ArrayList<>(sel.getListaEjercicios()));
                 startActivity(intent);
             });
         }

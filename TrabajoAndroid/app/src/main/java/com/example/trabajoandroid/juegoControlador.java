@@ -42,8 +42,7 @@ public class juegoControlador {
         circuitoJuegos = new InventarioCircuitoJuego();
     }
 
-    public void run() {
-        /*
+    public void run() {/*
         Ejercicio ej1 = new Ejercicio("Nombre1", "Descripcion1");
         Ejercicio ej2 = new Ejercicio("Nombre2", "Descripcion2");
         Ejercicio ej3 = new Ejercicio("Nombre3", "Descripcion3");
@@ -74,9 +73,9 @@ public class juegoControlador {
         ejs.add(iEj3.getObjectId());
 
         List<String> checkpoints = new ArrayList<>();
-        checkpoints.add("Arbol");
-        checkpoints.add("Banco");
-        checkpoints.add("Farola");
+        checkpoints.add("42.796115, -1.627748");
+        checkpoints.add("42.796022, -1.629337");
+        checkpoints.add("42.796885, -1.628121");
 
         Circuito cir1 = new Circuito("Parque1", "Facil", checkpoints, ejs);
         Circuito cir2 = new Circuito("Parque1", "Medio", checkpoints, ejs);

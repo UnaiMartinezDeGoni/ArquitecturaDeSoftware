@@ -7,4 +7,59 @@
     android:layout_height="match_parent"
     tools:context=".vista.EjercicioActivity">
 
+    <TextView
+        android:id="@+id/nombreTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Nombre del ejercicio"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/descripcionTextView"
+        android:layout_width="161dp"
+        android:layout_height="270dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Descripción del ejercicio"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nombreTextView" />
+
+    <androidx.camera.view.PreviewView
+        android:id="@+id/previewView"
+        android:layout_width="203dp"
+        android:layout_height="268dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="43dp"
+        app:layout_constraintStart_toEndOf="@+id/descripcionTextView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_visor"
+        android:layout_width="180dp"
+        android:layout_height="242dp"
+        android:layout_marginStart="115dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/descripcionTextView" />
+
+    <Button
+        android:id="@+id/buttonCamera"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:text="Sacar Foto"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_visor" />
+
+    <Button
+        android:id="@+id/buttonTerminar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="84dp"
+        android:text="Terminar Ejercicio"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_visor" />
 </androidx.constraintlayout.widget.ConstraintLayout>
