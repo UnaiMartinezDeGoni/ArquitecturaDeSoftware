@@ -24,7 +24,7 @@ public class Juego {//habria que pasar el juego al dao o añadir un inventario d
     private String user;
     private String circuito;
     private String dificultad;
-    private LocalTime horaInicio;
+    private transient LocalTime horaInicio;
     private float time; //El tiempo se añade al final del juego, pero el juego se crea cuando un usario selecciona un circuito
 
     public Juego(String user, String circuito, String dificultad) {
@@ -139,5 +139,9 @@ public class Juego {//habria que pasar el juego al dao o añadir un inventario d
 
     public void setTime(float tiempo){
         this.time = tiempo;
+    }
+
+    public String getDificultad() {
+        return dificultad;
     }
 }

@@ -40,6 +40,9 @@
             android:name=".vista.HomeActivity"
             android:exported="false" />
         <activity
+            android:name=".vista.MisJuegosActivity"
+            android:exported="false" />
+        <activity
             android:name=".vista.RegistrarseActivity"
             android:exported="false" />
         <activity
@@ -51,6 +54,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

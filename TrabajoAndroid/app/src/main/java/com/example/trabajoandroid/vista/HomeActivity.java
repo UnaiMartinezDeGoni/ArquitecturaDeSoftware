@@ -2,6 +2,7 @@ package com.example.trabajoandroid.vista;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
@@ -26,11 +27,18 @@ public class HomeActivity extends AppCompatActivity {
         Button btnMedio = findViewById(R.id.btnMedio);
         Button btnDificil = findViewById(R.id.btnDificil);
         Button btnTodos = findViewById(R.id.btnTodos);
+        Button btnMisJuegos = findViewById(R.id.btnMisJuegos);
 
         btnFacil.setOnClickListener(v -> navigateToCircuitos("Facil"));
         btnMedio.setOnClickListener(v -> navigateToCircuitos("Medio"));
         btnDificil.setOnClickListener(v -> navigateToCircuitos("Dificil"));
         btnTodos.setOnClickListener(v -> navigateToCircuitos("Todos"));
+        btnMisJuegos.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeActivity.this, MisJuegosActivity.class);
+            intent.putExtra("usuario", usuarioNombre);
+            startActivity(intent);
+        });
+
     }
 
     private void navigateToCircuitos(String dificultad) {
