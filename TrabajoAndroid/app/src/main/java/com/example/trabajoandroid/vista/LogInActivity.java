@@ -10,8 +10,10 @@ import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trabajoandroid.R;
-import com.example.trabajoandroid.dao.InventarioUsuario;
-import com.example.trabajoandroid.modelo.Usuario;
+
+import Bussiness.UsuarioService;
+import DAO.dao.InventarioUsuario;
+import Bussiness.modelo.Usuario;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -65,7 +67,8 @@ public class LogInActivity extends AppCompatActivity {
 
         new Thread(() -> {
             try {
-                Usuario usuario = verificarLogin(username, password);
+                UsuarioService user = new UsuarioService();
+                Usuario usuario = user.verificarLogin(username, password);
 
                 if (usuario != null) {
                     runOnUiThread(() -> {
@@ -85,41 +88,5 @@ public class LogInActivity extends AppCompatActivity {
         }).start();
     }
 
-    private Usuario verificarLogin(String username, String password) throws IOException {
-        String url = "https://parseapi.back4app.com/classes/Usuario?where={\"nombre\":\"" + username + "\"}";
 
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url(url)
-                .addHeader("X-Parse-Application-Id", "EHUFM0VK5GnLAD601JX7T3sEfDSQ4tDkEPlZFqwH")
-                .addHeader("X-Parse-REST-API-Key", "eQNek326ON4ELaQdzCbRKt0dDQYSZKQlie504BWb")
-                .get()
-                .build();
-
-        Log.d(TAG, "Haciendo solicitud a la URL: " + url); // Log para depurar URL
-
-        Response response = client.newCall(request).execute();
-
-        if (response.isSuccessful()) {
-            String responseBody = response.body().string();
-            Log.d(TAG, "Respuesta del servidor: " + responseBody); // Log para depurar la respuesta
-
-            JsonObject json = JsonParser.parseString(responseBody).getAsJsonObject();
-            JsonArray results = json.getAsJsonArray("results");
-
-            if (results.size() > 0) {
-                JsonObject userJson = results.get(0).getAsJsonObject();
-                Usuario usuario = new Gson().fromJson(userJson, Usuario.class);
-
-                // Comparar la contraseña correctamente
-                if (usuario.getPasswd().equals(password)) {
-                    return usuario;
-                }
-            }
-        } else {
-            Log.d(TAG, "Error en la respuesta: " + response.message()); // Log de error
-        }
-
-        return null;
-    }
 }

@@ -6,15 +6,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.trabajoandroid.R;
-import com.example.trabajoandroid.dao.InventarioUsuario;
-import com.example.trabajoandroid.modelo.Usuario;
+
+import Bussiness.UsuarioService;
+import DAO.dao.InventarioUsuario;
+import Bussiness.modelo.Usuario;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -65,7 +63,8 @@ public class RegistrarseActivity extends AppCompatActivity {
         new Thread(() -> {
             try {
                 // Llamar al método para verificar si el nombre de usuario ya existe
-                boolean usuarioExistente = verificarUsuarioExistente(username);
+                UsuarioService user = new UsuarioService();
+                boolean usuarioExistente = user.verificarUsuarioExistente(username);
 
                 if (usuarioExistente) {
                     runOnUiThread(() -> Toast.makeText(RegistrarseActivity.this, "El nombre de usuario ya está en uso", Toast.LENGTH_SHORT).show());
@@ -93,36 +92,5 @@ public class RegistrarseActivity extends AppCompatActivity {
         }).start();
     }
 
-    private boolean verificarUsuarioExistente(String username) {
-        // Comprobar si el nombre de usuario ya existe
-        // En este caso, se hace una consulta a Back4App buscando el nombre de usuario
-        String url = "https://parseapi.back4app.com/classes/Usuario?where={\"nombre\":\"" + username + "\"}";
 
-        try {
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .url(url)
-                    .addHeader("X-Parse-Application-Id", "EHUFM0VK5GnLAD601JX7T3sEfDSQ4tDkEPlZFqwH")
-                    .addHeader("X-Parse-REST-API-Key", "eQNek326ON4ELaQdzCbRKt0dDQYSZKQlie504BWb")
-                    .get()
-                    .build();
-            Response response = client.newCall(request).execute();
-
-            if (response.isSuccessful()) {
-                // Convertir el cuerpo de la respuesta a un string
-                String responseBody = response.body().string();
-
-                // Usamos Gson para analizar la respuesta JSON
-                JsonObject jsonResponse = JsonParser.parseString(responseBody).getAsJsonObject();
-                JsonArray results = jsonResponse.getAsJsonArray("results");
-
-                // Si el array "results" está vacío, no hay usuario
-                return results.size() > 0;  // Si hay elementos en "results", el usuario ya existe
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return false; // De forma predeterminada, asumimos que el usuario no existe
-    }
 }

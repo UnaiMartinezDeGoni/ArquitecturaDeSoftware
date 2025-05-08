@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -13,19 +11,16 @@ import android.widget.SimpleAdapter;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
-import com.example.trabajoandroid.LocalTimeAdapter;
 import com.example.trabajoandroid.R;
-import com.example.trabajoandroid.modelo.Circuito;
-import com.example.trabajoandroid.modelo.Juego;
-import com.example.trabajoandroid.modelo.Usuario;
+import Bussiness.modelo.Circuito;
+import Bussiness.modelo.Juego;
+import Bussiness.modelo.Usuario;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -92,30 +87,33 @@ public class MisJuegosActivity extends AppCompatActivity {
         Handler handler = new Handler(Looper.getMainLooper());
 
         executor.execute(() -> {
-            List<String> detalles = new ArrayList<>();
             List<Map<String, String>> datos = new ArrayList<>();
 
             for (String idJuego : usuario.getJuegosRealizados()) {
                 Juego juego = obtenerJuegoPorId(idJuego);
-                Log.d("juego", juego.toString());
                 if (juego != null) {
                     Circuito circuito = obtenerCircuitoPorId(juego.getCircuito());
-                    assert circuito != null;
-                    String detalle = "Circuito: " + circuito.getNombre()
-                            + " | Dificultad: " + juego.getDificultad()
-                            + " | Tiempo: " + String.format("%.2f", juego.getTime()) + " min";
-                    detalles.add(detalle);
-                    for (String idEj : circuito.getListaEjercicios()) {
-                        List<String> imagenes = obtenerImagenesPorEjercicio(idEj);
-                        for (String url : imagenes) {
-                            Map<String, String> map = new HashMap<>();
-                            map.put("texto", detalle);
-                            map.put("imagen", url);
-                            datos.add(map);
+                    if (circuito != null) {
+                        String detalle = "Circuito: " + circuito.getNombre()
+                                + " | Dificultad: " + juego.getDificultad()
+                                + " | Tiempo: " + String.format("%.2f", juego.getTime()) + " min";
+
+                        // Recolectar todas las imágenes del circuito
+                        List<String> imagenesCircuito = new ArrayList<>();
+                        for (String idEj : circuito.getListaEjercicios()) {
+                            imagenesCircuito.addAll(obtenerImagenesPorEjercicio(idEj));
+                        }
+
+                        // Si hay imágenes, añadimos una entrada por imagen
+                        if (!imagenesCircuito.isEmpty()) {
+                            for (String url : imagenesCircuito) {
+                                Map<String, String> map = new HashMap<>();
+                                map.put("texto", detalle);
+                                map.put("imagen", url);
+                                datos.add(map);
+                            }
                         }
                     }
-                } else {
-                    detalles.add("Juego no encontrado (ID: " + idJuego + ")");
                 }
             }
 
@@ -128,24 +126,18 @@ public class MisJuegosActivity extends AppCompatActivity {
                         new int[]{R.id.textViewJuego, R.id.imageViewJuego}
                 );
 
-                listView.setAdapter(adapter);
-
-                // Ahora carga las imágenes con Glide
-                for (int i = 0; i < datos.size(); i++) {
-                    Map<String, String> item = datos.get(i);
-                    String url = item.get("imagen");
-
-                    if (url != null && !url.isEmpty()) {
-                        // Carga la imagen solo si hay una URL válida
-                        View view = listView.getChildAt(i);
-                        if (view != null) {
-                            ImageView img = view.findViewById(R.id.imageViewJuego);
-                            Glide.with(MisJuegosActivity.this)
-                                    .load(url)
-                                    .into(img);
-                        }
+                // ViewBinder para Glide
+                adapter.setViewBinder((view, data, textRepresentation) -> {
+                    if (view.getId() == R.id.imageViewJuego && data instanceof String) {
+                        Glide.with(MisJuegosActivity.this)
+                                .load((String) data)
+                                .into((ImageView) view);
+                        return true;
                     }
-                }
+                    return false;
+                });
+
+                listView.setAdapter(adapter);
             });
         });
     }

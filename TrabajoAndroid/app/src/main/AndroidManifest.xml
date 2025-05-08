@@ -33,9 +33,6 @@
             android:name=".vista.CircuitosActivity"
             android:exported="false" />
         <activity
-            android:name=".vista.TodosCircuitosActivity"
-            android:exported="false" />
-        <activity
             android:name=".vista.HomeActivity"
             android:exported="false" />
         <activity

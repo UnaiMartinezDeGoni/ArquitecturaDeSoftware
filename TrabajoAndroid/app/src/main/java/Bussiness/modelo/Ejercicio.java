@@ -1,4 +1,4 @@
-package com.example.trabajoandroid.modelo;
+package Bussiness.modelo;
 
 public class Ejercicio {
     private String nombre;

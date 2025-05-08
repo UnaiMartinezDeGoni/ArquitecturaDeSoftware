@@ -12,12 +12,9 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.trabajoandroid.R;
 import com.example.trabajoandroid.UbicacionHelper;
-import com.example.trabajoandroid.dao.InventarioCircuitos;
-import com.example.trabajoandroid.dao.InventarioUsuario;
-import com.example.trabajoandroid.modelo.Circuito;
-import com.example.trabajoandroid.modelo.ItemEjercicio;
-import com.example.trabajoandroid.modelo.Juego;
-import com.example.trabajoandroid.modelo.Usuario;
+
+import Bussiness.JuegoService;
+import Bussiness.modelo.Juego;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -116,7 +113,8 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
             //Aqui se inicia la partida necesitamos saber el usuario del inicio y que circuito se ha seleccionado
             juego = new Juego(usuarioNombre, circuitoId, circuitoDificultad);
             new Thread(() -> {
-                juego.insert(); // <-- método que hace la solicitud HTTP
+                JuegoService ju = new JuegoService();
+                ju.insert(juego); // <-- método que hace la solicitud HTTP
 
                 runOnUiThread(() -> {
                     // Opcional: actualizar la UI si necesitas mostrar algo
@@ -202,7 +200,8 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
         //Aqui terminamos la partida, basicamente actualizamos el tiempo y lo actualizamos en el back4app
         juego.setTime(tiempoFinal);
         new Thread(() -> {
-            juego.actualizaJuego(); // <-- método que hace la solicitud HTTP
+            JuegoService ju = new JuegoService();
+            ju.update(juego); // <-- método que hace la solicitud HTTP
 
             runOnUiThread(() -> {
                 // Opcional: actualizar la UI si necesitas mostrar algo

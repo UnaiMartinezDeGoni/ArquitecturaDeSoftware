@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.example.trabajoandroid.dao;
+package DAO.dao;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -11,7 +11,8 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import com.example.trabajoandroid.modelo.*;
+
+import Bussiness.modelo.Ejercicio;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

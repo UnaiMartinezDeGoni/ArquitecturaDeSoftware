@@ -1,4 +1,4 @@
-package com.example.trabajoandroid.modelo;
+package Bussiness.modelo;
 
 import com.google.gson.annotations.SerializedName;
 

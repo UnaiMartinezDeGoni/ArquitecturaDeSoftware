@@ -8,9 +8,20 @@ import static java.lang.Thread.sleep;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import com.example.trabajoandroid.dao.*;
-import com.example.trabajoandroid.modelo.*;
-import com.example.trabajoandroid.vista.*;
+
+import Bussiness.JuegoService;
+import Bussiness.modelo.Circuito;
+import Bussiness.modelo.CircuitoJuego;
+import Bussiness.modelo.Juego;
+import Bussiness.modelo.Usuario;
+import Bussiness.modelo.UsuarioJuego;
+import DAO.dao.InventarioCircuitoItemEjercicio;
+import DAO.dao.InventarioCircuitoJuego;
+import DAO.dao.InventarioCircuitos;
+import DAO.dao.InventarioEjercicio;
+import DAO.dao.InventarioEjercicioItemEjercicio;
+import DAO.dao.InventarioUsuario;
+import DAO.dao.InventarioUsuarioJuego;
 
 /**
  *
@@ -130,7 +141,8 @@ public class juegoControlador {
         Circuito circuito = circuitos.getCircuito(indiceAleatorio); //Escojemos un circuito aleatorio, tambien se podria por dificultad
 
         Juego juego = new Juego(user.getId(), circuito.getId(), circuito.getDificultad());
-        juego.insert();
+        JuegoService ju = new JuegoService();
+        ju.insert(juego);
         CircuitoJuego cirJ = new CircuitoJuego(circuitos.getCircuito(indiceAleatorio).getId(), juego.getId());
         circuitoJuegos.insert(cirJ);
 
@@ -160,7 +172,8 @@ public class juegoControlador {
             Circuito circuito = circuitos.getCircuito(indiceAleatorio);
 
             Juego juego = new Juego(user.getId(), circuito.getId(), circuito.getDificultad());
-            juego.insert();
+            JuegoService ju = new JuegoService();
+            ju.insert(juego);
             CircuitoJuego cirJ = new CircuitoJuego(circuitos.getCircuito(indiceAleatorio).getId(), juego.getId());
             circuitoJuegos.insert(cirJ);
 
@@ -178,7 +191,7 @@ public class juegoControlador {
         if(usuarios.getUsuario(indice).getJuegosRealizados().contains(juego.getId())){
             int i = usuarios.getUsuario(indice).getJuegosRealizados().indexOf(juego);
             juego.actualizarTiempo();
-            juego.actualizaJuego();
+            //juego.actualizaJuego();
             usuarios.actualizaUsuario(usuarios.getUsuario(indice));
         }else{
             System.out.println("No existe ese juego");

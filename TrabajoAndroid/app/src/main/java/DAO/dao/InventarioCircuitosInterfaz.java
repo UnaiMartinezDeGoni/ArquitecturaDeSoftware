@@ -2,19 +2,20 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
  */
-package com.example.trabajoandroid.dao;
+package DAO.dao;
 
 import java.util.List;
-import com.example.trabajoandroid.modelo.*;
+
+import Bussiness.modelo.Circuito;
 
 /**
  *
  * @author alumno
  */
-public interface InventarioUsuarioInterfaz {
-    public List<Usuario> getAll() ;
+public interface InventarioCircuitosInterfaz {
+    public List<Circuito> getAll() ;
 
-    public String insert(Usuario user);
+    public String insert(Circuito circuito);
 
-    public void actualizaUsuario(Usuario user);
+    public void actualizaCircuito(Circuito circuito);
 }

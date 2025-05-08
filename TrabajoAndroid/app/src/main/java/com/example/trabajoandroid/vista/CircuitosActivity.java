@@ -9,7 +9,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trabajoandroid.R;
-import com.example.trabajoandroid.modelo.Circuito;
+
+import Bussiness.CircuitosService;
+import Bussiness.modelo.Circuito;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -49,12 +51,8 @@ public class CircuitosActivity extends AppCompatActivity {
     private class ObtenerCircuitosTask extends AsyncTask<String, Void, ArrayList<Circuito>> {
         @Override
         protected ArrayList<Circuito> doInBackground(String... params) {
-            try {
-                return obtenerCircuitosPorDificultad(params[0]);
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            }
+            CircuitosService cir = new CircuitosService();
+            return cir.obtenerCircuitosPorDificultad(params[0]);
         }
 
         @Override
@@ -82,51 +80,6 @@ public class CircuitosActivity extends AppCompatActivity {
                 intent.putStringArrayListExtra("circuito_ejs", new ArrayList<>(sel.getListaEjercicios()));
                 startActivity(intent);
             });
-        }
-
-        private ArrayList<Circuito> obtenerCircuitosPorDificultad(String filtro) throws IOException {
-            ArrayList<Circuito> list = new ArrayList<>();
-            String url = "https://parseapi.back4app.com/classes/Circuito";
-            if (!"Todos".equals(filtro)) {
-                url += "?where={\"dificultad\":\"" + filtro + "\"}";
-            }
-
-            OkHttpClient client = new OkHttpClient();
-            Request req = new Request.Builder()
-                    .url(url)
-                    .addHeader("X-Parse-Application-Id", "EHUFM0VK5GnLAD601JX7T3sEfDSQ4tDkEPlZFqwH")
-                    .addHeader("X-Parse-REST-API-Key", "eQNek326ON4ELaQdzCbRKt0dDQYSZKQlie504BWb")
-                    .get().build();
-
-            Response resp = client.newCall(req).execute();
-            if (!resp.isSuccessful()) return list;
-
-            JsonObject root = JsonParser.parseString(resp.body().string()).getAsJsonObject();
-            JsonArray results = root.getAsJsonArray("results");
-            for (int i = 0; i < results.size(); i++) {
-                JsonObject obj = results.get(i).getAsJsonObject();
-                String id = obj.get("objectId").getAsString();
-                String nombre = obj.get("nombre").getAsString();
-                String dif = obj.get("dificultad").getAsString();
-
-                JsonArray cps = obj.getAsJsonArray("checkpoints");
-                List<String> checkpoints = new ArrayList<>();
-                for (int j = 0; j < cps.size(); j++) {
-                    checkpoints.add(cps.get(j).getAsString());
-                }
-
-                JsonArray lis = obj.getAsJsonArray("listaEjercicios");
-                List<String> ejercicios = new ArrayList<>();
-                for (int j = 0; j < lis.size(); j++) {
-                    ejercicios.add(lis.get(j).getAsString());
-                }
-
-                // Crear circuito y asignar el ID
-                Circuito circuito = new Circuito(nombre, dif, checkpoints, ejercicios);
-                circuito.setId(id);  // <-- asegurate de tener este setter en tu clase Circuito
-                list.add(circuito);
-            }
-            return list;
         }
     }
 }

@@ -1,9 +1,8 @@
-package com.example.trabajoandroid.dao;
-
-import android.util.Log;
+package DAO.dao;
 
 import com.example.trabajoandroid.LocalTimeAdapter;
-import com.example.trabajoandroid.modelo.EjercicioItemEjercicio;
+import Bussiness.modelo.Usuario;
+import Bussiness.modelo.UsuarioJuego;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -21,13 +20,13 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class InventarioEjercicioItemEjercicio {
-    private final String API_URL = "https://parseapi.back4app.com/classes/EjercicioItemEjercicio";
+public class InventarioUsuarioJuego {
+    private final String API_URL = "https://parseapi.back4app.com/classes/UsuarioJuego";
     private final String APPLICATION_ID ="EHUFM0VK5GnLAD601JX7T3sEfDSQ4tDkEPlZFqwH";
     private final String REST_API_KEY ="eQNek326ON4ELaQdzCbRKt0dDQYSZKQlie504BWb";
 
-    public ArrayList<EjercicioItemEjercicio> getAll(){
-        ArrayList<EjercicioItemEjercicio> usuarios = new ArrayList<EjercicioItemEjercicio>();
+    public ArrayList<UsuarioJuego> getAll(){
+        ArrayList<UsuarioJuego> usuarios = new ArrayList<UsuarioJuego>();
         try{
             //sincrono
             OkHttpClient client = new OkHttpClient();
@@ -47,7 +46,7 @@ public class InventarioEjercicioItemEjercicio {
                 Gson gson = new GsonBuilder()
                         .registerTypeAdapter(LocalTime.class, new LocalTimeAdapter())
                         .create();
-                Type listType = new TypeToken<ArrayList<EjercicioItemEjercicio>>() {
+                Type listType = new TypeToken<ArrayList<Usuario>>() {
                 }.getType();
                 usuarios = gson.fromJson(jsonArray, listType);
             }
@@ -57,13 +56,12 @@ public class InventarioEjercicioItemEjercicio {
         return usuarios;
     }
 
-    public String insert(EjercicioItemEjercicio usuario){
+    public String insert(UsuarioJuego usuario){
         String objectId="";
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(LocalTime.class, new LocalTimeAdapter())
                 .create();
         String jsonUsuario = gson.toJson(usuario);
-        System.out.println("JSON que se enviará: " + jsonUsuario);
         try {
             Request request = new Request.Builder()
                     .url(API_URL)
@@ -74,8 +72,8 @@ public class InventarioEjercicioItemEjercicio {
             OkHttpClient client = new OkHttpClient();
             Response response = client.newCall(request).execute();
             if(response.isSuccessful()) {
-                EjercicioItemEjercicio newUsuario = gson.fromJson(response.body().string(), EjercicioItemEjercicio.class);
-                objectId = String.valueOf(newUsuario.getObjectId());
+                UsuarioJuego newUsuario = gson.fromJson(response.body().string(), UsuarioJuego.class);
+                objectId = String.valueOf(newUsuario.getId());
                 System.out.println("insert" + objectId);
             }
         }
@@ -85,7 +83,7 @@ public class InventarioEjercicioItemEjercicio {
         return objectId;
     }
 
-    public void actualizaEjercicioItemEjercicio(EjercicioItemEjercicio user) {
+    public void actualizaUsuario(UsuarioJuego user) {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(LocalTime.class, new LocalTimeAdapter())
                 .create();
@@ -93,7 +91,7 @@ public class InventarioEjercicioItemEjercicio {
 
         try {
             // Crear la URL con el objectId del circuito que quieres actualizar
-            String url = API_URL + "/" + user.getObjectId();
+            String url = API_URL + "/" + user.getId();
 
             // Crear la solicitud PUT
             Request request = new Request.Builder()

@@ -31,8 +31,8 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.example.trabajoandroid.R;
-import com.example.trabajoandroid.dao.InventarioImagen;
-import com.example.trabajoandroid.modelo.Imagen;
+import DAO.dao.InventarioImagen;
+import Bussiness.modelo.Imagen;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;

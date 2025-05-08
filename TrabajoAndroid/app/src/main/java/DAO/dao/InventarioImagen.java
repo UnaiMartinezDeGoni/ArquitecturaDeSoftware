@@ -1,6 +1,6 @@
-package com.example.trabajoandroid.dao;
+package DAO.dao;
 
-import com.example.trabajoandroid.modelo.Imagen;
+import Bussiness.modelo.Imagen;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;

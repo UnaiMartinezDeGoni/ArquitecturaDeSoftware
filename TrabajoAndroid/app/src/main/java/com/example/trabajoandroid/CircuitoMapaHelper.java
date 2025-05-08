@@ -1,10 +1,9 @@
 package com.example.trabajoandroid;
 
 import android.os.AsyncTask;
-import android.widget.Toast;
 
-import com.example.trabajoandroid.dao.InventarioCircuitos;
-import com.example.trabajoandroid.modelo.Circuito;
+import DAO.dao.InventarioCircuitos;
+import Bussiness.modelo.Circuito;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;

@@ -8,12 +8,11 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.trabajoandroid.R;
-import com.example.trabajoandroid.modelo.Circuito;
+import Bussiness.modelo.Circuito;
 
 import java.util.ArrayList;
 
 public class CircuitoAdapter extends BaseAdapter {
-
     private Context context;
     private ArrayList<Circuito> circuitos;
 
