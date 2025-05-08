@@ -9,6 +9,7 @@ import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.trabajoandroid.LocalTimeAdapter;
 import com.example.trabajoandroid.R;
 import com.example.trabajoandroid.modelo.Circuito;
@@ -23,7 +24,9 @@ import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -87,6 +90,7 @@ public class MisJuegosActivity extends AppCompatActivity {
 
         executor.execute(() -> {
             List<String> detalles = new ArrayList<>();
+            List<Map<String, String>> datos = new ArrayList<>();
 
             for (String idJuego : usuario.getJuegosRealizados()) {
                 Juego juego = obtenerJuegoPorId(idJuego);
@@ -98,6 +102,15 @@ public class MisJuegosActivity extends AppCompatActivity {
                             + " | Dificultad: " + juego.getDificultad()
                             + " | Tiempo: " + String.format("%.2f", juego.getTime()) + " min";
                     detalles.add(detalle);
+                    for (String idEj : circuito.getListaEjercicios()) {
+                        List<String> imagenes = obtenerImagenesPorEjercicio(idEj);
+                        for (String url : imagenes) {
+                            Map<String, String> map = new HashMap<>();
+                            map.put("texto", detalle);
+                            map.put("imagen", url);
+                            datos.add(map);
+                        }
+                    }
                 } else {
                     detalles.add("Juego no encontrado (ID: " + idJuego + ")");
                 }
@@ -192,5 +205,36 @@ public class MisJuegosActivity extends AppCompatActivity {
 
     private static class CircuitoResponse {
         List<Circuito> results;
+    }
+
+    private List<String> obtenerImagenesPorEjercicio(String idEjercicio) {
+        List<String> urls = new ArrayList<>();
+        String API_URL = "https://parseapi.back4app.com/classes/Imagen?where={\"idEjercicio\":\"" + idEjercicio + "\"}";
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url(API_URL)
+                .addHeader("X-Parse-Application-Id", APPLICATION_ID)
+                .addHeader("X-Parse-REST-API-Key", REST_API_KEY)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (response.isSuccessful() && response.body() != null) {
+                String json = response.body().string();
+                JsonObject obj = JsonParser.parseString(json).getAsJsonObject();
+                JsonArray results = obj.getAsJsonArray("results");
+
+                for (int i = 0; i < results.size(); i++) {
+                    JsonObject imgObj = results.get(i).getAsJsonObject();
+                    if (imgObj.has("url")) {
+                        urls.add(imgObj.get("url").getAsString());
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return urls;
     }
 }

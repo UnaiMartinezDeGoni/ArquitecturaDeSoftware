@@ -185,7 +185,7 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
             ubicHelper.detenerActualizaciones(); // Método que puedes agregar en tu clase UbicacionHelper para detener el seguimiento de la ubicación.
 
             // Abrir la siguiente actividad (EjercicioActivity)
-            Intent intent = new Intent(MapaActivity.this, FinalActivity.class);
+            Intent intent = new Intent(MapaActivity.this, HomeActivity.class);
             startActivity(intent);
             finish();
         }
@@ -196,6 +196,9 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
         long tiempoFinal = System.currentTimeMillis() - tiempoInicio;
         // Aquí puedes mostrar el tiempo final o hacer alguna acción adicional
         System.out.println("Cronómetro detenido, tiempo: " + tiempoFinal);
+        String mensaje = String.format("Has terminado el juego! Has tardado: %.2f", tiempoFinal);
+        mensajeInicio.setText(mensaje);
+        mensajeInicio.postDelayed(() -> mensajeInicio.setVisibility(View.GONE), 4000);
         //Aqui terminamos la partida, basicamente actualizamos el tiempo y lo actualizamos en el back4app
         juego.setTime(tiempoFinal);
         new Thread(() -> {

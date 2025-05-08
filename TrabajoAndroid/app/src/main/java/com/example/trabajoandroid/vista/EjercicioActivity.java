@@ -1,3 +1,4 @@
+
 package com.example.trabajoandroid.vista;
 
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
@@ -16,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraInfo;
@@ -28,16 +28,12 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.example.trabajoandroid.R;
-import com.example.trabajoandroid.modelo.ItemEjercicio;
-import com.example.trabajoandroid.modelo.Usuario;
+import com.example.trabajoandroid.dao.InventarioImagen;
+import com.example.trabajoandroid.modelo.Imagen;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -45,7 +41,6 @@ import com.google.gson.JsonParser;
 import java.io.File;
 import java.io.IOException;
 
-import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -66,6 +61,7 @@ public class EjercicioActivity extends AppCompatActivity {
     private Handler photoHandler;
     private Runnable photoRunnable;
     private boolean fotoTomada = false;
+    private String idEj;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +71,7 @@ public class EjercicioActivity extends AppCompatActivity {
         nombreTextView = findViewById(R.id.nombreTextView);
         descripcionTextView = findViewById(R.id.descripcionTextView);
 
-        String idEj = getIntent().getStringExtra("ejercicio_id");
+        idEj = getIntent().getStringExtra("ejercicio_id");
         Log.d(TAG, "ejercicio_id recibido: " + idEj);
         System.out.println(idEj);
         if (idEj != null) {
@@ -266,6 +262,9 @@ public class EjercicioActivity extends AppCompatActivity {
         btnTerminar.setEnabled(true);
 
         File fotoFile = new File(getExternalFilesDir(null), "foto_" + System.currentTimeMillis() + ".jpg");
+        /*InventarioImagen rep = new InventarioImagen();
+        Imagen imagen = new Imagen(rep.upload(fotoFile, "foto_" + System.currentTimeMillis() + ".jpg").getUrl(), idEj);
+        rep.insert(imagen);*/
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.TITLE, "Foto tomada con CameraX");
         values.put(MediaStore.Images.Media.DESCRIPTION, "Foto tomada desde la app");
@@ -279,6 +278,29 @@ public class EjercicioActivity extends AppCompatActivity {
                         Log.d("MainActivity", "Imagen guardada en " + outputFileResults.getSavedUri());
                         Bitmap bitmap = BitmapFactory.decodeFile(fotoFile.getAbsolutePath());
                         visor.setImageBitmap(bitmap);
+
+                        // ✅ Ahora sí, la imagen ya está guardada: puedes subirla
+                        new Thread(() -> {
+                            try {
+                                InventarioImagen rep = new InventarioImagen();
+                                Imagen subida = rep.upload(fotoFile, fotoFile.getName());
+
+                                if (subida != null) {
+                                    subida.setIdEjercicio(idEj);  // Asegúrate de que este setter existe
+                                    rep.insert(subida);
+                                } else {
+                                    Log.e("Upload", "Upload falló, usando ruta local.");
+                                    Imagen imagen = new Imagen(fotoFile.getAbsolutePath(), idEj);
+                                    rep.insert(imagen);
+                                }
+
+                            } catch (Exception e) {
+                                Log.e("Upload", "Excepción al subir la imagen", e);
+                                InventarioImagen rep = new InventarioImagen();
+                                Imagen imagen = new Imagen(fotoFile.getAbsolutePath(), idEj);
+                                rep.insert(imagen);  // fallback incluso si hubo un error inesperado
+                            }
+                        }).start();
                     }
 
                     @Override
@@ -303,7 +325,7 @@ public class EjercicioActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        photoHandler.postDelayed(photoRunnable, 20000);  // Toma una foto después de 20 segundos
+        photoHandler.postDelayed(photoRunnable, 15000);  // Toma una foto después de 20 segundos
     }
 
     @Override
