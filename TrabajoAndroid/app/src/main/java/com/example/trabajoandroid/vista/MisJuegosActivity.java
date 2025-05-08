@@ -4,8 +4,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -117,9 +120,32 @@ public class MisJuegosActivity extends AppCompatActivity {
             }
 
             handler.post(() -> {
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(MisJuegosActivity.this,
-                        android.R.layout.simple_list_item_1, detalles);
+                SimpleAdapter adapter = new SimpleAdapter(
+                        MisJuegosActivity.this,
+                        datos,
+                        R.layout.item_juego,
+                        new String[]{"texto", "imagen"},
+                        new int[]{R.id.textViewJuego, R.id.imageViewJuego}
+                );
+
                 listView.setAdapter(adapter);
+
+                // Ahora carga las imágenes con Glide
+                for (int i = 0; i < datos.size(); i++) {
+                    Map<String, String> item = datos.get(i);
+                    String url = item.get("imagen");
+
+                    if (url != null && !url.isEmpty()) {
+                        // Carga la imagen solo si hay una URL válida
+                        View view = listView.getChildAt(i);
+                        if (view != null) {
+                            ImageView img = view.findViewById(R.id.imageViewJuego);
+                            Glide.with(MisJuegosActivity.this)
+                                    .load(url)
+                                    .into(img);
+                        }
+                    }
+                }
             });
         });
     }
