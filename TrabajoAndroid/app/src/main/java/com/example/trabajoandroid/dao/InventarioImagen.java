@@ -43,7 +43,7 @@ public class InventarioImagen {
         try {
             String url = API_URL + nameFileUpload;
             Request request = new Request.Builder()
-                    .url(url)
+                    .url("https://parseapi.back4app.com/files/" + nameFileUpload)
                     .addHeader("X-Parse-Application-Id", APPLICATION_ID)
                     .addHeader("X-Parse-REST-API-Key", REST_API_KEY)
                     .post(RequestBody.create(MediaType.parse("image/jpeg"), imageFile))
