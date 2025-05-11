@@ -30,4 +30,16 @@ public class Ejercicio {
     public void setId(String id){
         this.objectId = id;
     }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
+    }
 }

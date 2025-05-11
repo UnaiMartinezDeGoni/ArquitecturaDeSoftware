@@ -68,5 +68,25 @@ public class Usuario {
     public int hashCode() {
         return Objects.hash(nombre, objectId, correo, passwd, juegosRealizados);
     }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    public void setPasswd(String passwd) {
+        this.passwd = passwd;
+    }
+
+    public void setJuegosRealizados(List<String> juegosRealizados) {
+        this.juegosRealizados = juegosRealizados;
+    }
 }
 

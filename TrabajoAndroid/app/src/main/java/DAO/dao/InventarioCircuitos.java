@@ -4,6 +4,9 @@
  */
 package DAO.dao;
 
+import android.util.Log;
+
+import com.example.trabajoandroid.vista.InformacionCircuitoActivity;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -108,7 +111,6 @@ public class InventarioCircuitos implements InventarioCircuitosInterfaz{
         return objectId;
     }
 
-
     @Override
     public void actualizaCircuito(Circuito circuito) {
         Gson gson = new Gson();
@@ -191,5 +193,59 @@ public class InventarioCircuitos implements InventarioCircuitosInterfaz{
             list.add(circuito);
         }
         return list;
+    }
+
+    public Circuito obtenerCircuitoPorId(String objectId){
+        // La URL de la API debería construirse correctamente para hacer la búsqueda por objectId
+        String apiUrl = "https://parseapi.back4app.com/classes/Circuito?where={\"objectId\":\"" + objectId + "\"}";
+
+        // Crear el cliente HTTP para la solicitud
+        OkHttpClient client = new OkHttpClient();
+
+        // Construir la solicitud GET
+        Request request = new Request.Builder()
+                .url(apiUrl)
+                .addHeader("X-Parse-Application-Id", APPLICATION_ID)
+                .addHeader("X-Parse-REST-API-Key", REST_API_KEY)
+                .addHeader("Content-Type", "application/json")
+                .get()
+                .build();
+
+        // Realizar la solicitud y manejar la respuesta
+        try (Response response = client.newCall(request).execute()) {
+            if (response.isSuccessful() && response.body() != null) {
+                String json = response.body().string();  // Obtener la respuesta en formato JSON
+
+                // Para depuración, imprimimos el JSON recibido
+                Log.d("Circuito json:", json);
+
+                // Convertir el JSON a un objeto Circuito usando Gson
+                Gson gson = new Gson();
+                InventarioCircuitos.CircuitoResponse circuitoResponse = gson.fromJson(json, InventarioCircuitos.CircuitoResponse.class);
+
+                // Depurar la respuesta para ver si se han recibido datos
+                Log.d("CircuitoResponse: ", circuitoResponse.toString());
+
+                // Verificar si tenemos resultados
+                if (circuitoResponse.results != null && !circuitoResponse.results.isEmpty()) {
+                    Circuito circuito = circuitoResponse.results.get(0);  // Obtener el primer circuito
+                    Log.d("Circuito: ", String.valueOf(circuito));  // Depuración para ver el objeto Circuito
+                    return circuito;  // Devolver el circuito encontrado
+                } else {
+                    Log.e("Error:", "No se encontró el circuito con el ID especificado.");
+                }
+            } else {
+                Log.e("Error:", "Respuesta no exitosa al buscar el circuito.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("Error:", "Error en la solicitud GET: " + e.getMessage());
+        }
+
+        return null;  // Devolver null si no se encontró el circuito
+    }
+
+    private static class CircuitoResponse{
+        List<Circuito> results;
     }
 }

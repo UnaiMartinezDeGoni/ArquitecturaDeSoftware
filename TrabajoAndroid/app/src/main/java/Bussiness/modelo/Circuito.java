@@ -10,6 +10,27 @@ public class Circuito {
     private String objectId;
     private String nombre;
     private String dificultad;
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public void setDificultad(String dificultad) {
+        this.dificultad = dificultad;
+    }
+
+    public void setCheckpoints(List<String> checkpoints) {
+        this.checkpoints = checkpoints;
+    }
+
+    public void setListaEjercicios(List<String> listaEjercicios) {
+        this.listaEjercicios = listaEjercicios;
+    }
+
     private List<String> checkpoints;
     private List<String> listaEjercicios;
 

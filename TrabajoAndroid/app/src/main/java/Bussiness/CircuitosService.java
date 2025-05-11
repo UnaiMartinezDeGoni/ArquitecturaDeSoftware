@@ -36,4 +36,8 @@ public class CircuitosService {
             throw new RuntimeException(e);
         }
     }
+
+    public Circuito obtenerCircuitoPorId(String objectId){
+        return obtenerCircuitoPorId(objectId);
+    }
 }

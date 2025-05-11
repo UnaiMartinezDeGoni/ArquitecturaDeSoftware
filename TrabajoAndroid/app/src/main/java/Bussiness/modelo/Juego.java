@@ -78,4 +78,24 @@ public class Juego {//habria que pasar el juego al dao o añadir un inventario d
     public String getDificultad() {
         return dificultad;
     }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public void setCircuito(String circuito) {
+        this.circuito = circuito;
+    }
+
+    public void setDificultad(String dificultad) {
+        this.dificultad = dificultad;
+    }
+
+    public void setHoraInicio(LocalTime horaInicio) {
+        this.horaInicio = horaInicio;
+    }
 }
