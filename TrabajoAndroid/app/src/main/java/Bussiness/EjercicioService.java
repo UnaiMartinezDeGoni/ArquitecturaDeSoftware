@@ -14,8 +14,8 @@ public class EjercicioService {
     }
 
     public String insert(Ejercicio cirItem){
-        ejerciciosRepository.insert(cirItem);
-        return cirItem.getId();
+        String id = ejerciciosRepository.insert(cirItem);
+        return id;
     }
 
     /*public boolean update(Circuito employee) {

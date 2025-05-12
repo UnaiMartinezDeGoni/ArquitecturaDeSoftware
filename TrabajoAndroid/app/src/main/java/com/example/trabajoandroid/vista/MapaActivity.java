@@ -14,7 +14,9 @@ import com.example.trabajoandroid.R;
 import com.example.trabajoandroid.UbicacionHelper;
 
 import Bussiness.JuegoService;
+import Bussiness.UsuarioService;
 import Bussiness.modelo.Juego;
+import Bussiness.modelo.Usuario;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -24,6 +26,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MapaActivity extends FragmentActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
@@ -41,6 +44,7 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
     private String circuitoId;
     private String circuitoDificultad;
     private int indiceEjs = 0;
+    private String idJuego;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +118,7 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
             juego = new Juego(usuarioNombre, circuitoId, circuitoDificultad);
             new Thread(() -> {
                 JuegoService ju = new JuegoService();
-                ju.insert(juego); // <-- método que hace la solicitud HTTP
+                idJuego = ju.insert(juego); // <-- método que hace la solicitud HTTP
 
                 runOnUiThread(() -> {
                     // Opcional: actualizar la UI si necesitas mostrar algo
@@ -174,7 +178,7 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         // Si no hay más checkpoints, finalizar o realizar alguna acción adicional
-        if (indiceCheckpoint >= checkpoints.size()) {
+        else{
             Toast.makeText(MapaActivity.this, "¡Has completado el circuito!", Toast.LENGTH_SHORT).show();
             // Detener el cronómetro
             detenerCronometro();
@@ -194,18 +198,26 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
         long tiempoFinal = System.currentTimeMillis() - tiempoInicio;
         // Aquí puedes mostrar el tiempo final o hacer alguna acción adicional
         System.out.println("Cronómetro detenido, tiempo: " + tiempoFinal);
-        String mensaje = String.format("Has terminado el juego! Has tardado: %.2f", tiempoFinal);
+        String mensaje = String.format("Has terminado el juego! Has tardado: %.2f segundos", tiempoFinal / 1000.0);
         mensajeInicio.setText(mensaje);
+        mensajeInicio.setVisibility(View.VISIBLE);
         mensajeInicio.postDelayed(() -> mensajeInicio.setVisibility(View.GONE), 4000);
         //Aqui terminamos la partida, basicamente actualizamos el tiempo y lo actualizamos en el back4app
         juego.setTime(tiempoFinal);
         new Thread(() -> {
-            JuegoService ju = new JuegoService();
-            ju.update(juego); // <-- método que hace la solicitud HTTP
-
-            runOnUiThread(() -> {
-                // Opcional: actualizar la UI si necesitas mostrar algo
-            });
+            UsuarioService us = new UsuarioService();
+            List<Usuario> users = us.getAll();
+            for(Usuario user : users){
+                if(user.getId().equals(usuarioNombre)){
+                    Usuario correcto = user;
+                    Log.d("Update usuario", idJuego);
+                    correcto.getJuegosRealizados().add(idJuego);
+                    JuegoService ju = new JuegoService();
+                    us.update(correcto);
+                    ju.update(juego); // <-- método que hace la solicitud HTTP
+                    break;
+                }
+            }
         }).start();
     }
 }

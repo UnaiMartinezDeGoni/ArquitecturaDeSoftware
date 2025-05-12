@@ -13,8 +13,8 @@ public class JuegoService {
     }
 
     public String insert(Juego cirItem){
-        juegoRepository.insert(cirItem);
-        return cirItem.getId();
+        String id = juegoRepository.insert(cirItem);
+        return id;
     }
 
     public boolean update(Juego employee) {

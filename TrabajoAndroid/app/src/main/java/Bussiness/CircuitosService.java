@@ -16,8 +16,8 @@ public class CircuitosService {
     }
 
     public String insert(Circuito cirItem){
-        circuitoRepository.insert(cirItem);
-        return cirItem.getId();
+        String id = circuitoRepository.insert(cirItem);
+        return id;
     }
 
     /*public boolean update(Circuito employee) {
@@ -35,6 +35,10 @@ public class CircuitosService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public Circuito getCircuito(int seleccionado){
+        return getCircuito(seleccionado);
     }
 
     public Circuito obtenerCircuitoPorId(String objectId){

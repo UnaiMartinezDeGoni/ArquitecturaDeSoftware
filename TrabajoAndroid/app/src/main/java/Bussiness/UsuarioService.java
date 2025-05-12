@@ -34,4 +34,8 @@ public class UsuarioService {
     public boolean verificarUsuarioExistente(String username){
         return usuarioRepository.verificarUsuarioExistente(username);
     }
+
+    public Usuario getUsuario(int seleccionado){
+        return getUsuario(seleccionado);
+    }
 }

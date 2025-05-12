@@ -13,8 +13,8 @@ public class ItemEjercicioService {
     }
 
     public String insert(ItemEjercicio cirItem){
-        itemEjercicioRepository.insert(cirItem);
-        return cirItem.getObjectId();
+        String id = itemEjercicioRepository.insert(cirItem);
+        return id;
     }
 
     /*public boolean update(CircuitoItemEjercicio employee) {
