@@ -48,6 +48,7 @@ import okhttp3.Response;
 public class EjercicioActivity extends AppCompatActivity {
     private TextView nombreTextView;
     private TextView descripcionTextView;
+    private TextView cantidadTextView;
     private static final String BASE_URL = "https://parseapi.back4app.com/";
     private static final String APP_ID = "EHUFM0VK5GnLAD601JX7T3sEfDSQ4tDkEPlZFqwH";
     private static final String API_KEY = "eQNek326ON4ELaQdzCbRKt0dDQYSZKQlie504BWb";
@@ -70,16 +71,17 @@ public class EjercicioActivity extends AppCompatActivity {
 
         nombreTextView = findViewById(R.id.nombreTextView);
         descripcionTextView = findViewById(R.id.descripcionTextView);
+        cantidadTextView = findViewById(R.id.cantidadtextView);
 
         idEj = getIntent().getStringExtra("ejercicio_id");
         Log.d(TAG, "ejercicio_id recibido: " + idEj);
         System.out.println(idEj);
         if (idEj != null) {
             obtenerEjercicioRelacionado(idEj);
+            obtenerDatosItemEjercicio(idEj);
         } else {
             Toast.makeText(this, "ID de ItemEjercicio no proporcionado", Toast.LENGTH_LONG).show();
         }
-
         btnCamara = findViewById(R.id.buttonCamera);
         btnCamara.setOnClickListener(view -> {
             if (!fotoTomada) {  // Solo tomar foto si no se ha tomado una antes
@@ -205,6 +207,48 @@ public class EjercicioActivity extends AppCompatActivity {
                         runOnUiThread(() -> {
                             nombreTextView.setText(nombre);
                             descripcionTextView.setText(descripcion);
+                        });
+                    } else {
+                        Log.e(TAG, "El objeto Ejercicio no contiene los campos esperados.");
+                    }
+                } else {
+                    Log.e(TAG, "Error al obtener Ejercicio: " + response.message());
+                }
+            } catch (IOException e) {
+                Log.e(TAG, "Excepción al obtener Ejercicio: " + e.getMessage());
+            }
+        }).start();
+    }
+
+    private void obtenerDatosItemEjercicio(String ejercicioId) {
+        // Paso 2: consultar el objeto Ejercicio
+        String url = BASE_URL + "classes/ItemEjercicio/" + ejercicioId;
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("X-Parse-Application-Id", APP_ID)
+                .addHeader("X-Parse-REST-API-Key", API_KEY)
+                .get()
+                .build();
+
+        new Thread(() -> {
+            try {
+                // Ejecuta la solicitud en el hilo secundario
+                Response response = client.newCall(request).execute();
+
+                if (response.isSuccessful()) {
+                    String body = response.body().string();
+                    Log.d(TAG, "Respuesta de Ejercicio: " + body);
+
+                    // Procesa la respuesta en un objeto Json
+                    JsonObject ejercicio = JsonParser.parseString(body).getAsJsonObject();
+
+                    if (ejercicio.has("cantidad")) {
+                        String nombre = ejercicio.get("cantidad").getAsString();
+
+                        // Actualiza la UI en el hilo principal
+                        runOnUiThread(() -> {
+                            cantidadTextView.setText("Repeticiones: " + nombre);
                         });
                     } else {
                         Log.e(TAG, "El objeto Ejercicio no contiene los campos esperados.");

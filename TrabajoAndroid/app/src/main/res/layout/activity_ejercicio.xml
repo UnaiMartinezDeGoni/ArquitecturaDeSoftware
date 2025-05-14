@@ -19,10 +19,10 @@
 
     <TextView
         android:id="@+id/descripcionTextView"
-        android:layout_width="161dp"
-        android:layout_height="270dp"
+        android:layout_width="150dp"
+        android:layout_height="183dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="92dp"
         android:text="Descripción del ejercicio"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nombreTextView" />
@@ -62,4 +62,14 @@
         android:text="Terminar Ejercicio"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_visor" />
+
+    <TextView
+        android:id="@+id/cantidadtextView"
+        android:layout_width="149dp"
+        android:layout_height="68dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:text="repeticiones"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nombreTextView" />
 </androidx.constraintlayout.widget.ConstraintLayout>

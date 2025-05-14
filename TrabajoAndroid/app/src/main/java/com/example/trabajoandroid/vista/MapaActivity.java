@@ -119,6 +119,7 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
             new Thread(() -> {
                 JuegoService ju = new JuegoService();
                 idJuego = ju.insert(juego); // <-- método que hace la solicitud HTTP
+                juego.setObjectId(idJuego);
 
                 runOnUiThread(() -> {
                     // Opcional: actualizar la UI si necesitas mostrar algo
